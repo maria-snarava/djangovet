@@ -19,3 +19,5 @@ venv/
 
 # pycharm
 .idea/
+
+keys.json

@@ -1,3 +1,6 @@
+import json
+from django.core.exceptions import ImproperlyConfigured
+
 """
 Django settings for djangovet project.
 
@@ -19,13 +22,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
+KEYSDIR = str(BASE_DIR)+"/keys.json"
+
+with open(KEYSDIR) as k:
+    project_keys = json.loads(k.read())
+
+def getKey(setting,project_keys=project_keys):
+    try:
+        return project_keys[setting]
+    except KeyError:
+        errorMessage = "Set the {} env var".format(setting)
+        raise ImproperlyConfigured(errorMessage)
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6iackfmy5^i(j55meq%(#d#^3baoew4h!_ow%faqc!v&4g51%_'
+SECRET_KEY = getKey("SECRETKEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['snaravam.pythonanywhere.com']
 
 
 # Application definition
@@ -119,6 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/snaravam/djangovet/vetoffice/static'
 
 LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = 'home'
